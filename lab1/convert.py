@@ -3,26 +3,32 @@
 def celsius_to_fahrenheit(t_celsius):
     result = ((9/5) * t_celsius + 32) 
     print(f"That corrensponds to {result} Fahrenheit")
+    return result
 
 def fahrenheit_to_celsius(t_fahrenheit):
     result = (5/9) * (t_fahrenheit - 32)
     print(f"That corrensponds to {result} Celsius")
+    return result
 
 def celsius_to_kelvin(t_celsius):
     result = t_celsius + 273.15
     print(f"That corrensponds to {result} Kelvin")
+    return result
 
 def kelvin_to_celsius(t_kelvin):
     result = t_kelvin - 273.15
     print(f"That corrensponds to {result} Celsius")
+    return result
 
 def fahrenheit_to_kelvin(t_fahrenheit):
     result = (((t_fahrenheit - 32)*5)/9)+273.15
     print(f"That corrensponds to {result} Kelvin")
+    return result
 
 def kelvin_to_fahrenheit(t_kelvin):
     result = (((t_kelvin - 273.15) * 9) / 5) + 32            
     print(f"That corrensponds to {result} Fahrenheit")
+    return result
 
 
 def user_input():
