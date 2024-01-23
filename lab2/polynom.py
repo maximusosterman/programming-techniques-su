@@ -20,7 +20,7 @@ def poly_to_string(p_list):
     return final_string
 
 def drop_zeros(p_list):
-
+    
     while p_list[-1] == 0:
         del p_list[-1]
 
@@ -28,7 +28,12 @@ def drop_zeros(p_list):
 
 
 if __name__ == '__main__':
+    # Task 1
     p = [2, 0, 1]
-    q = [-2, 1, 0, 0, 1, 0, 0]
-    print(drop_zeros(q))
+    q = [-2, 1, 0, 0, 1]
+
+    # Task 2
+    p0 = [2, 0, 1, 0]
+    q0 = [0, 0, 0]
+    print(drop_zeros(p0))
 
