@@ -29,6 +29,18 @@ def drop_zeros(p_list):
 def eq_poly(p_list,q_list):
     return drop_zeros(p_list) == drop_zeros(q_list)
 
+def eval_poly(p_list, x):
+    
+    sum = 0
+
+    for degree, coeff in enumerate(p_list):
+        if degree == 0:
+            sum += coeff
+        else:
+            sum += coeff * x ** degree
+
+    return sum
+
 if __name__ == '__main__':
     # Task 1
     p = [2, 0, 1]
@@ -38,5 +50,5 @@ if __name__ == '__main__':
     p0 = [2, 0, 1, 0]
     q0 = [0, 0, 0]
 
-    print(eq_poly(q0,[]))
+    print(eval_poly(q,-2))
 
