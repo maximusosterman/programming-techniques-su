@@ -25,6 +25,7 @@ def poly_to_string(p_list):
         degree += 1
 
     final_string = ' + '.join(terms) # The string ' + ' is used as "glue" between the elements in the string
+    final_string = final_string.replace("1x", "x")
     
     return final_string
 
@@ -92,5 +93,5 @@ if __name__ == '__main__':
 
     # print(add_poly(p, q))
 
-    print(poly_to_string(p))
+    print(poly_to_string([1,1,-1]))
 
