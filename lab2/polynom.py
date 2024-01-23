@@ -26,6 +26,8 @@ def drop_zeros(p_list):
 
     return p_list
 
+def eq_poly(p_list,q_list):
+    return drop_zeros(p_list) == drop_zeros(q_list)
 
 if __name__ == '__main__':
     # Task 1
@@ -35,5 +37,6 @@ if __name__ == '__main__':
     # Task 2
     p0 = [2, 0, 1, 0]
     q0 = [0, 0, 0]
-    print(drop_zeros(q0))
+
+    print(eq_poly(q0,[]))
 
