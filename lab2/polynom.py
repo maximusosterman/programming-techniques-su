@@ -1,11 +1,20 @@
 
+def check_all_zeros(list):
+    for element in list:
+        if element != 0:
+            return False
+
+    return True
+
+
+
 def poly_to_string(p_list):
     '''
     Return a string with a nice readable version of the polynomial given in p_list.
     '''
 
-    if p_list == [] or all(element == 0 for element in p_list):
-        return 0
+    if p_list == [] or check_all_zeros(p_list): ## If list is empty or all contains zero
+        return "0"
 
     terms = []
     degree = 0
@@ -45,7 +54,7 @@ def eval_poly(p_list, x):
 
     for degree, coeff in enumerate(p_list):
         if degree == 0:
-            sum += coeff
+            sum += coeff # This to avoid the constant to be powered by the 0
         else:
             sum += coeff * x ** degree
 
@@ -83,6 +92,7 @@ def sub_poly(p_list,q_list):
     return add_poly(p_list, neg_poly(q_list))
 
 if __name__ == '__main__':
+    
     # Task 1
     p = [2, 0, 1]
     q = [-2, 1, 0, 0, 1]
@@ -91,7 +101,4 @@ if __name__ == '__main__':
     p0 = [2, 0, 1, 0]
     q0 = [0, 0, 0]
 
-    # print(add_poly(p, q))
-
-    print(poly_to_string([1,1,-1]))
-
+    print(check_all_zeros([0,0,0,0]))
