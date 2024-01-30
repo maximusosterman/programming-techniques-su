@@ -1,5 +1,13 @@
 
 def check_all_zeros(list):
+    """Checks if all elemtnts of list are zeros
+
+    Args:
+        list (numbers): list of polynomial
+
+    Returns:
+        _type_: boolean indicating whether there are zeros in list
+    """
     for element in list:
         if element != 0:
             return False
@@ -39,6 +47,14 @@ def poly_to_string(p_list):
     return final_string
 
 def drop_zeros(p_list):
+    """Removes worthless zeros from the end of a polynomial
+
+    Args:
+        list (numbers): list of polynomial
+
+    Returns:
+        _type_: Polynomial without zeros at the end of the polynomial
+    """
     
     while len(p_list) != 0 and p_list[-1] == 0:
         del p_list[-1]
@@ -46,9 +62,28 @@ def drop_zeros(p_list):
     return p_list
 
 def eq_poly(p_list,q_list):
+    """Checks equallity between two polynomials
+
+    Args:
+        p_list (numbers): list of polynomial
+        q_list (numbers): list of polynomial
+
+    Returns:
+        _type_: boolen in which the polynomials are equal or not
+    """
     return drop_zeros(p_list) == drop_zeros(q_list)
 
 def eval_poly(p_list, x):
+
+    """Evaluates polynomials when plugging in a value of x
+
+    Args:
+        p_list (numbers): list of polynomial
+        x (number): value of x which will determine the sum the polynomial
+
+    Returns:
+        _type_: the sum of the polynomial
+    """
     
     sum = 0
 
@@ -61,6 +96,15 @@ def eval_poly(p_list, x):
     return sum
 
 def neg_poly(p_list):
+
+    """Negates the polynomial
+
+    Args:
+        p_list (numbers): list of polynomial
+
+    Returns:
+        _type_: Negated polynomial
+    """
     
     p_list = p_list.copy()
 
@@ -71,6 +115,15 @@ def neg_poly(p_list):
     
 
 def add_poly(p_list,q_list):
+    """Adds two polynoms 
+
+    Args:
+        p_list (numbers): list of polynom
+        q_list (numbers): list of polynom
+
+    Returns:
+        _type_: New polynom which is a sum of the two inputs
+    """
     
     new_poly = []
 
@@ -89,6 +142,15 @@ def add_poly(p_list,q_list):
 
 
 def sub_poly(p_list,q_list):
+    """Subtracts two polynoms from each other. 
+
+    Args:
+        p_list (numbers): List of polynomial
+        q_list (_type_): List of polynomial
+
+    Returns:
+        _type_: Subtracted polynomial 
+    """
     return add_poly(p_list, neg_poly(q_list))
 
 if __name__ == '__main__':
