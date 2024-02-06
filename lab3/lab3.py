@@ -32,8 +32,27 @@ def number_lines(f: str):
     except IOError:
         print("Error opening " + f)
 
+def index_text(filename: str):
+    table: dict = {}
+    try:
+        with open(filename, "r") as file:
+            for line_number, line in enumerate(file):
+                for word in line.lower().replace("\n", "").split(" "): # Set all lower case letters, removing new lines and splitting the line into words
+                    print(word)
+                    if word in table:
+                        if line_number not in table[word]:
+                            table[word].append(line_number)
+                    else:
+                        table[word] = [line_number]
+
+        return table
+        
+    except IOError:
+        print("Error opening " + filename)
+    
+
 def main():
-    number_lines("poem.txt")
+    print(index_text("summer.txt"))
 
 if __name__ == '__main__':
     main()
