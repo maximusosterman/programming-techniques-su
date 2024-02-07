@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 def insert_in_sorted(x, sorted_list: list):
-    print("insert_in_sorted {} {}".format(x, sorted_list))
     for i, item in enumerate(sorted_list):
-        print("X: {} Item: {}".format(x, item))
-        if len(x[1]) > len(item[1]):
+        if type(x) is tuple: ## Diffrent comparison being made if x is tuple or not
+            if len(x[1]) > len(item[1]): ## Taking in a tuple and comparing the lenghts of the arrays (Number of occurences)
+                sorted_list.insert(i, x)
+                break
+        else:
+            if sorted_list[i] > x:
+                sorted_list.insert(i, x)
+                break
 
-            print("len(x[1]) > len(item[i][1]) - {} > {} - Inserted in position {}".format(len(x[1]), len(item[1]), i))
-            sorted_list.insert(i, x)
-            break
     else:
         sorted_list.append(x)
 
@@ -16,12 +18,9 @@ def insert_in_sorted(x, sorted_list: list):
 
 
 def insertion_sort(my_list: list):
-    print("Insersion sort {}".format(my_list))
     out: list = []
     for x in my_list:
-        print("Handling {}".format(x))
         out = insert_in_sorted(x, out)
-        print("OUT: {}".format(out))
 
     return out
 
@@ -34,10 +33,10 @@ def number_lines(f: str):
                         new_file.write(f"{index} {line}")
 
             except IOError:
-                print("Error creating new file")
+                print("Error creating new file!")
 
     except IOError:
-        print("Error opening " + f)
+        print("File not found! " + f)
 
 def index_text(filename: str):
     table: dict = {}
@@ -54,39 +53,36 @@ def index_text(filename: str):
         return table
         
     except IOError:
-        print("Error opening " + filename)
+        print(f"File '{filename}' not found!")
 
 def important_words(an_index: dict, stop_words: list):
 
     an_index_no_stop_words = [(word, an_index[word]) for word in an_index if word not in stop_words] # Removes the stop words from the dict
+
+    sorted_list = insertion_sort(an_index_no_stop_words)
+    important_words: list = [word[0] for word in sorted_list[:5]]
     
-    return an_index_no_stop_words[5:]
+    return important_words
 
 def user_filename_input():
-    file_choice = str(input("Enter a text file: "))
-    current_stop_words = ["and", "I", "that", "it", "for"]
+    current_stop_words = ["and", "I", "that", "it", "for"]  # English/Swedish stop words ["jag", "gör", "och", "så", "det"]
 
-    result = index_text(file_choice)
+    while True:
 
-    # result = important_words(index_text(file_choice), current_stop_words)
-    if result:
-        print("The most important words are: ")
-        for word in result:
-            print(word)
+        file_choice = str(input("Enter a text file: "))
+        indexed_text = index_text(file_choice)
 
-    
+        if indexed_text:
+            break
 
-def debugging(my_dict):
-    sorted_dict = dict(sorted(my_dict.items(), key=lambda x: len(x[1])))
-    for word in sorted_dict:
-        print(f"{word}, {len(sorted_dict[word])}")
+    result = important_words(indexed_text, current_stop_words)
+
+    print("The most important words are: ")
+    for word in result:
+        print(word)
 
 def main():
-    idas_dict = index_text("idas.txt")
-    my_list = important_words(idas_dict, ["jag", "gör", "och", "så", "det"])
-    sorted_list = insertion_sort(my_list)
-    print(sorted_list)
-    
+    user_filename_input()
 
 if __name__ == '__main__':
     main()
