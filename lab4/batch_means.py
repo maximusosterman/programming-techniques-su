@@ -1,4 +1,12 @@
-"""LAB 4"""
+"""LAB 4
+The goal of this program is to read in a data file with (invented) data from several batches of measurements,
+taken from different points on the plane, and for each batch calculate the average of the measurements
+taken inside the unit circle. A point (𝑥, 𝑦) in the plane is inside the unit circle if 𝑥2 + 𝑦2 ≤ 1.
+Measurements taken outside the unit circle should be ignored. The data file has four columns separated
+with commas: it is a so-called csv file (where “csv” stands for comma-separated values). The first number
+records which batch a measurement belongs to, while the second and third record the 𝑥- and𝑦-coordinates
+where the measurement was taken, and the fourth number is the measurement itself.
+"""
 
 import os
 
@@ -17,11 +25,11 @@ def get_user_file_choice() -> str:
     User stuck here util a valid file is entered.
     """
     while True:
-        filename = input('Which csv file should be analyzed? ')
+        filename = input('Which csv file should be analyzed?: ')
         if os.path.exists(filename):
-            break
+            return filename
+        print(f'File "{filename}" not found!')
 
-    return filename
 
 def print_and_process_results(data: dict):
     """Prints the results after it being processed.
@@ -37,8 +45,13 @@ def print_and_process_results(data: dict):
             if x**2 + y**2 <= 1:
                 x_sum += val
                 n += 1
-            average = x_sum/n
-        print(batch, "\t", average)
+            try:
+                average = x_sum/n
+                print(batch, "\t", average)
+
+            except ZeroDivisionError: # Catches error if trying to divide by zero
+                print(batch, "\t", "Can not divide by zero. Averge is not possible!")
+
 
 def read_data(filename: str) -> dict:
     """Reading and collecting data from a file
@@ -51,14 +64,19 @@ def read_data(filename: str) -> dict:
     """
 
     data = {}
-    with open(filename, 'r', encoding="utf-8") as h:
-        for line in h:
-            four_vals = line.split(',')
+    with open(filename, 'r', encoding="utf-8") as file:
+        for line in file:
+            four_vals = line.strip().split(',')
+            if four_vals == [""]:
+                break
             batch = four_vals[0]
             if not batch in data:
                 data[batch] = []
             # Collect data from an expe friment:
-            data[batch] += [(float(four_vals[1]), float(four_vals[2]), float(four_vals[3]))]
+            try:
+                data[batch] += [(float(four_vals[1]), float(four_vals[2]), float(four_vals[3]))]
+            except ValueError:
+                print(f"{four_vals} ignored - Not valid input!")
 
     return data
 
