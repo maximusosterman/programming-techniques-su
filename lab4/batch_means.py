@@ -1,14 +1,21 @@
-"""LAB 4
-The goal of this program is to read in a data file with (invented) data from several batches of measurements,
-taken from different points on the plane, and for each batch calculate the average of the measurements
-taken inside the unit circle. A point (𝑥, 𝑦) in the plane is inside the unit circle if 𝑥2 + 𝑦2 ≤ 1.
-Measurements taken outside the unit circle should be ignored. The data file has four columns separated
-with commas: it is a so-called csv file (where “csv” stands for comma-separated values). The first number
-records which batch a measurement belongs to, while the second and third record the 𝑥- and𝑦-coordinates
+"""
+LAB 4
+
+The goal of this program is to read in a data file with (invented) data from 
+several batches of measurements, taken from different points on the plane,
+and for each batch calculate the average of the measurements taken inside the unit circle.
+A point (x, y) in the plane is inside the unit circle if x^2 + y^2 ≤ 1.
+
+Measurements taken outside the unit circle should be ignored.
+The data file has four columns separated with commas: it is a so-called csv file
+(where “csv” stands for comma-separated values). The first number records which batch a measurement
+belongs to, while the second and third record the x- and y-coordinates
 where the measurement was taken, and the fourth number is the measurement itself.
 """
-
+import math
 import os
+
+import matplotlib.pyplot as plt
 
 # Sample data:
 # 1, 0.1, 0.2, 73
@@ -20,12 +27,12 @@ import os
 # batch 1 and batch 2.
 
 def get_user_file_choice() -> str:
-    """
-    Get user input from in which checks if the desired file exists.
-    User stuck here util a valid file is entered.
+    """ Get user input from in which checks if the desired file exists.
+        User stuck here until a valid file is entered.
     """
     while True:
         filename = input('Which csv file should be analyzed?: ')
+        print()
         if os.path.exists(filename):
             return filename
         print(f'File "{filename}" not found!')
@@ -61,7 +68,6 @@ def process_data(data: dict) -> dict:
                 average = x_sum/n
                 processed_data[batch] = average
 
-
             except ZeroDivisionError: # If value is over 1 then it will try to divide by zero.
                 pass
 
@@ -90,9 +96,40 @@ def read_data(filename: str) -> dict:
             try:
                 data[batch] += [(float(four_vals[1]), float(four_vals[2]), float(four_vals[3]))]
             except ValueError:
-                print(f"{four_vals} ignored - Not valid input!")
+                print(f"Warning: wrong input format for entry: {four_vals}\n")
 
     return data
+
+def plot_data(data: dict ,f: str):
+    """Plots out the data a displays it in realtion to a circle and a graph.
+
+    Args:
+        data (dict): The data to be displayed
+        f (str): filename to be rendered with.
+    """
+    filename = f.replace(".csv", ".pdf")
+    # Calculate 150 coordinates to draw the circle
+    angles = [ n/150 * 2 * math.pi for n in range(151) ]
+    x_coords = [ math.cos(a) for a in angles ]
+    y_coords = [ math.sin(a) for a in angles ]
+    # Draw the circle
+    plt.plot(x_coords,y_coords)
+
+    colors = ['r', 'b', 'g', 'c', 'm']
+    colors_index = 0
+    offset = 0.02
+
+    # Here be your code to plot "data"
+    for batch in data:
+        for x, y, measurement in data[batch]:
+            plt.plot(x,y, colors[colors_index]+"o", markersize=3.5)
+            plt.text(x + offset, y + offset, measurement, fontsize=5, ha='left', color=colors[colors_index])
+        colors_index += 1
+
+    plt.savefig(filename)
+    print("\nA plot of data can be found in " + filename)
+
+
 
 def main():
     '''
@@ -103,6 +140,7 @@ def main():
     data = read_data(filename)
     result = process_data(data)
     print_results(result)
+    plot_data(data, filename)
 
 
 # Start the main program: this is idiomatic python
