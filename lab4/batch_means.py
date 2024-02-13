@@ -31,13 +31,25 @@ def get_user_file_choice() -> str:
         print(f'File "{filename}" not found!')
 
 
-def print_and_process_results(data: dict):
-    """Prints the results after it being processed.
+def print_results(results: dict):
+    """Firstly sorts the batches and prints the averges from each.
+
+    Args:
+        results (dict): Dictonay containg the batch respectively the averge
+    """
+    soreted_results = sorted(results.items(), key=lambda x: x[1], reverse=True)
+    print("Batch\t Average")
+    for batch, average in soreted_results:
+        print(batch, "\t", average)
+
+
+def process_data(data: dict) -> dict:
+    """Process the data by calculating each batch and ignoring those with values is greater than 1.
 
     Args:
         data (dict): The dictionary in which the results are stored
     """
-    print("Batch\t Average")
+    processed_data = {}
     for batch, sample in data.items():
         n = 0
         x_sum = 0
@@ -47,11 +59,13 @@ def print_and_process_results(data: dict):
                 n += 1
             try:
                 average = x_sum/n
-                print(batch, "\t", average)
+                processed_data[batch] = average
 
-            except ZeroDivisionError: # Catches error if trying to divide by zero
-                print(batch, "\t", "Can not divide by zero. Averge is not possible!")
 
+            except ZeroDivisionError: # If value is over 1 then it will try to divide by zero.
+                pass
+
+    return processed_data
 
 def read_data(filename: str) -> dict:
     """Reading and collecting data from a file
@@ -87,7 +101,8 @@ def main():
 
     filename = get_user_file_choice()
     data = read_data(filename)
-    print_and_process_results(data)
+    result = process_data(data)
+    print_results(result)
 
 
 # Start the main program: this is idiomatic python
