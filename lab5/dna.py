@@ -1,5 +1,5 @@
 class DnaSeq:
-    def __init__(self, accession, seq):
+    def __init__(self, accession: str, seq: str):
 
         if not accession or not seq:
             raise ValueError
@@ -15,8 +15,31 @@ class DnaSeq:
         return f"<DnaSeq accession='{self.accession}'>" 
 
 
-def read_dna(  ):
-    pass
+def read_dna(filename: str) -> list[DnaSeq]:
+    """Reads DNA sequences from a text file and returns a list of DnaSeq Objects
+
+    Args:
+        filename (str): filename in which to read the DNA sequences from.
+
+    Returns:
+        list[DnaSeq]: List with DnaSeq objects
+    """
+    dna_sequences = []
+
+    try:
+        with open(filename, "r") as dna_file:
+            dna_file_iter = iter(dna_file)
+            for line in dna_file_iter:
+                if line[0] == ">":
+                    accession = line.replace(">", "").strip()
+                    sequence = next(dna_file_iter).strip()
+                    dna_sequences.append(DnaSeq(accession, sequence))
+
+    except Exception as e:
+        print(f"Unexpected error opening file: {filename}")
+        print("Error:", e)
+
+    return dna_sequences
 
 
 def check_exact_overlap(  ):
@@ -120,5 +143,5 @@ def test_all():
 # test_all()
     
 if __name__ == '__main__':
-    test_class_DnaSeq()
+    test_reading()
 
