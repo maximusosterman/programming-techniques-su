@@ -76,11 +76,14 @@ def overlaps(dna_objects: list[DnaSeq], overlap_detection) -> dict[dict]:
                     overlap_detected = overlap_detection(current_dna, compared_dna)
                     if overlap_detected != 0:
                         current_dna_dict[compared_dna.accession] = overlap_detected
-                        print(current_dna.accession, "x",compared_dna.accession)
         result_dict[current_dna.accession] = current_dna_dict
+
+    removed_empty_dicts = result_dict.copy()
+    for accession, dicts in result_dict.items():
+        if dicts == {}:
+             del removed_empty_dicts[accession]
             
-    print(result_dict)
-    return result_dict
+    return removed_empty_dicts
 
 
 #
@@ -176,5 +179,5 @@ def test_all():
 # test_all()
     
 if __name__ == '__main__':
-    test_overlap()
+    test_all()
 
