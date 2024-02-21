@@ -65,14 +65,24 @@ def check_exact_overlap(a: DnaSeq, b: DnaSeq, min_len: int =10):
 
 
 def overlaps(dna_objects: list[DnaSeq], overlap_detection) -> dict[dict]:
+    """This higher order function itirates through the dna_list and using a combinatorics algorithm to check each overlap between the DNA strings.
+    It finishes of by removing all DNA which has no overlaps.
+
+    Args:
+        dna_objects (list[DnaSeq]): The list of dna objects to be checked for overlaps.
+        overlap_detection (_type_): The function to be used to check for overlaps
+
+    Returns:
+        dict[dict]: Dict with a format of {dna: {dna_compared: overlap_length}}
+    """
     
     result_dict = {}
 
     for current_dna in dna_objects:
         current_dna_dict = {}
         for compared_dna in dna_objects:
-            if compared_dna.seq is not current_dna.seq:
-                if compared_dna not in result_dict:
+            if compared_dna.seq is not current_dna.seq: # Not comparing with itself
+                if compared_dna not in result_dict: # Not comparing a pair that already has been compared.
                     overlap_detected = overlap_detection(current_dna, compared_dna)
                     if overlap_detected != 0:
                         current_dna_dict[compared_dna.accession] = overlap_detected
