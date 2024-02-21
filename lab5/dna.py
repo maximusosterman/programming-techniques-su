@@ -7,7 +7,6 @@ class DnaSeq:
         self.accession = accession
         self.seq = seq 
             
-
     def __len__(self):
         return len(self.seq)
 
@@ -42,12 +41,46 @@ def read_dna(filename: str) -> list[DnaSeq]:
     return dna_sequences
 
 
-def check_exact_overlap(  ):
-    pass
+def check_exact_overlap(a: DnaSeq, b: DnaSeq, min_len: int =10):
+    """Cheks the overlap between two DNA sequences. Goes through the back to the beginning of sequence A. Front to back for sequence B.
+
+    Args:
+        a (DnaSeq): DnaObject to check overlap
+        b (DnaSeq): DnaObject to check for overlap
+        min_len (int, optional): The shortest in which the overlap has to be to be counted. Defaults to 10. 
+
+    Returns:
+        _type_: Returns a string of the overlap. If none is found then 0 will be returned.
+    """
+
+    overlap_string = ""
+    for i in range(len(a.seq)):
+        if a.seq[-len((b.seq[:i])):] == b.seq[:i]:
+            overlap_string = b.seq[:i]
+
+    if len(overlap_string) >= min_len:
+        return len(overlap_string)
+    
+    return 0
 
 
-def overlaps(  ):
-    pass
+def overlaps(dna_objects: list[DnaSeq], overlap_detection) -> dict[dict]:
+    
+    result_dict = {}
+
+    for current_dna in dna_objects:
+        current_dna_dict = {}
+        for compared_dna in dna_objects:
+            if compared_dna.seq is not current_dna.seq:
+                if compared_dna not in result_dict:
+                    overlap_detected = overlap_detection(current_dna, compared_dna)
+                    if overlap_detected != 0:
+                        current_dna_dict[compared_dna.accession] = overlap_detected
+                        print(current_dna.accession, "x",compared_dna.accession)
+        result_dict[current_dna.accession] = current_dna_dict
+            
+    print(result_dict)
+    return result_dict
 
 
 #
@@ -143,5 +176,5 @@ def test_all():
 # test_all()
     
 if __name__ == '__main__':
-    test_reading()
+    test_overlap()
 
