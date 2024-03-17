@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageEnhance
 import pickle
 
 # The user should be able to run following commands:
@@ -27,38 +27,59 @@ class ImageFile:
             self.width, self.height = self.img.size
             self.ratio = self.height / self.width
 
-
         except Exception as e:
             print("Error loading image: " + filename)
             print(e)
-
-
-
-    def change_height(self, new_height):
-        self.width = self.width * ( new_height / self.height / self.ratio )
-        self.height = new_height
-        self.resize_image(self.width)
-
-    def change_width(self, new_width):
-        pass
         
     def get_info(self):    
-        return f"filename: {self.filename}\nsize: {self.image_size}"
+        return f"filename: {self.filename}\nsize: ({self.width, self.height})"
     
     def greyify(self):
         self.img = self.img.convert(mode="L")
     
-    def resize_image(self, new_width=50):
-        self.width = new_width
-        self.height = int(self.ratio * self.width)
+    def resize_image(self, new_width=None, new_height=None):
+        """
+        Resizes the image based on the provided width or height.
+
+        Args:
+            new_width (int, optional): The new width for the image. Defaults to None.
+            new_height (int, optional): The new height for the image. Defaults to None.
+
+        Raises:
+            ValueError: If neither width nor height is provided.
+        """
+
+        if new_width is None and new_height is None:
+            self.width = 50
+            self.height = int(self.ratio * self.width)
+        # Maintain aspect ratio if only one dimension is provided
+        elif new_width is not None and new_height is None:
+            self.width = new_width
+            self.height = int(self.ratio * self.width)
+        elif new_width is None and new_height is not None:
+            self.height = new_height
+            self.width = int(self.ratio * self.height)
+        else:
+            # If both width and height are provided, use them directly
+            self.width = new_width
+            self.height = new_height
+
         self.img = self.img.resize((self.width, self.height))
     
     def convert_to_ascii(self):
         pixels = self.img.getdata()
         return "".join([ASCII_CHARS[pixel//25] for pixel in pixels])
     
+    def change_brightness(self, change_factor):
+        enhancer = ImageEnhance.Brightness(self.img)
+        self.img = enhancer.enhance(change_factor)
+        self.img.show()
+
+    def change_contrast(self, change_factor):
+        self.img = ImageEnhance.Contrast(self.img).enhance(change_factor)
+        self.img.show()
+    
     def render(self):
-        self.resize_image()
         self.greyify()
         image_data = self.convert_to_ascii()
         count_pixels = len(image_data)
@@ -109,11 +130,11 @@ def main():
             elif len(args) == 1: # render img
                 try:
                     print(image_alias_DB[args[0]].render())
+                    current_file = image_alias_DB[args[0]]
 
                 except Exception as e:
                     print(f"Error: Could not render file")
                     print(e)
-                    break
 
             elif len(args) == 3 and args[1] == "to": # render img to filename
                 try:
@@ -209,6 +230,40 @@ def main():
             except Exception as e:
                 print("Error: An unknown error occurred")
                 print(e)
+
+        if command == "set":
+            try:
+
+                action = args[1]
+
+                if action not in ["height", "width", "brightness", "contrast"]:
+                    raise IndexError
+                
+                filename = args[0]
+                num = int(args[2])
+
+                if filename in image_alias_DB:
+                    current_file = image_alias_DB[filename]
+                    
+                    if action == "width":
+                        image_alias_DB[filename].resize_image(new_width=num)
+
+                    if action == "height":
+                        image_alias_DB[filename].resize_image(new_height=num)
+
+                    if action == "brightness":
+                        image_alias_DB[filename].change_brightness(num)
+
+                    if action == "contrast":
+                        image_alias_DB[filename].change_contrast(num)
+
+                else:
+                    print(filename + " is not found")
+
+            except IndexError:
+                print("Not valid command")
+
+                
 
 if __name__ == '__main__':
     main()
